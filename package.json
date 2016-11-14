@@ -1,0 +1,24 @@
+{
+  "name": "carmin-be",
+  "version": "1.0.0",
+  "description": "Career Map Admin - Back End",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "https://gitlab.com/vankovych/carmin.git",
+  "author": "Andriy Vankovych",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "body-parser": "^1.15.2",
+    "bunyan": "^1.8.4",
+    "express": "^4.14.0",
+    "mongoose": "^4.6.4",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
