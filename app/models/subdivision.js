@@ -3,11 +3,12 @@ const mongoose = Promise.promisifyAll(require('mongoose'))
 
 const Schema = mongoose.Schema
 
-const DivisionSchema = new Schema({
+const SubdivisionSchema = new Schema({
   _id: String,
-  title: String,
+  name: String,
   subTitle: String,
-  subdivisions: Array
+  parent_id: String,
+  subnodes: Array
 })
 
-module.exports = mongoose.model('Division', DivisionSchema)
+module.exports = mongoose.model('Subdivision', SubdivisionSchema)
