@@ -7,7 +7,6 @@ const SubdivisionSchema = new Schema({
   _id: String,
   name: String,
   subTitle: String,
-  parent_id: String,
   subnodes: Array
 })
 
