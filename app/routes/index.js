@@ -21,7 +21,13 @@ router.route('/divisions/:id')
   .get(divisions.get)
   .put(divisions.update)
 
+router.route('/divisions/:d_id/subdivisions')
+  .get(divisions.subdivisions.get)
 
+router.route('/divisions/:d_id/subdivisions/:s_id')
+  .post(divisions.subdivisions.add)
+  .delete(divisions.subdivisions.remove)
+ 
 router.route('/subdivisions')
   .get(subdivision.getAll)
   .post(subdivision.create)

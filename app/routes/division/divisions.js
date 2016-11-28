@@ -6,6 +6,7 @@ exports.getAll = getAll
 exports.get = get
 exports.remove = remove
 exports.update = update
+exports.subdivisions = require('./subdivisions.js')
 
 function create (req, res, next) {
   const division = new Division()
@@ -24,7 +25,7 @@ function create (req, res, next) {
 }
 
 function getAll (req, res, next) {
-  Division.findAsync()
+  Division.findAsync() 
     .then(divisions => {
       res.json({ status: 'OK', data: divisions })
     })
