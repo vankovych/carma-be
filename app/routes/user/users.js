@@ -1,4 +1,4 @@
-const User= require('./../../models/user')
+const User = require('./../../models/user')
 const mongoose = require('mongoose')
 
 exports.create = create
@@ -7,22 +7,28 @@ exports.remove = remove
 exports.update = update
 exports.get = get
 
-
 function create (req, res, next) {
   const user = new User()
-  user.login= req.body.login
-  user.password = req.body.password
-  user._id = mongoose.Types.ObjectId()
+  var passw = /^[A-Za-z]\w{7,14}$/
+    
 
-  user.save(err => {
-    if (err) {
-      res.send(err)
-      console.log(err)
 
-    }
-    res.json({ status: 'OK`', data: user })
-  })
-    .catch(next)
+  if (!req.body.password.match(passw) || !req.body.login.match(passw)) {
+    res.status(400).json({error: 'Please check your login or password'})
+  } else {
+    user.login = req.body.login
+    user.password = req.body.password
+    user._id = mongoose.Types.ObjectId()
+
+    user.save(err => {
+      if (err) {
+        res.send(err)
+        console.log(err)
+      }
+      res.json({ status: 'OK', data: user })
+    })
+      .catch(next)
+  }
 }
 
 function getAll (req, res, next) {
@@ -43,7 +49,7 @@ function remove (req, res, next) {
           if (err) {
             res.send(err)
           } else {
-            res.status(200).json({status: "OK", data: user})
+            res.status(200).json({status: 'OK', data: user})
           }
         })
       }
@@ -53,7 +59,10 @@ function remove (req, res, next) {
 function update (req, res, next) {
   User.findByIdAsync(req.params.id)
     .then(user => {
-      user.login= req.body.login
+         if (user === undefined || user === null) {
+        res.status(404).json({data: `Can't find user with id ${req.params.id}`})
+      } else {
+      user.login = req.body.login
       user.password = req.body.password
 
       user.save(err => {
@@ -63,6 +72,7 @@ function update (req, res, next) {
 
         res.json({ status: 'OK' })
       })
+      }
     })
     .catch(next)
 }
