@@ -7,7 +7,6 @@ const PositionSchema = new Schema(
   {
     name: String,
     subTitle: String,
-    parent_id: String,
     requirements: Array
   }
 )

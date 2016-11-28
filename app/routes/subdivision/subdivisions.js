@@ -8,11 +8,7 @@ exports.remove = remove
 exports.update = update
 
 function create (req, res, next) {
-  if (req.body.parent_id === undefined) {
-    res.status(500).end()
-    return
-  } else {
-    const subdivision = new Subdivision()
+  const subdivision = new Subdivision()
     subdivision.name = req.body.name
     subdivision.subTitle = req.body.subTitle
     subdivision._id = mongoose.Types.ObjectId()
@@ -25,7 +21,6 @@ function create (req, res, next) {
     })
 
     res.status(200).json({status: "OK", data: subdivision})
-  }
 }
 
 function getAll (req, res, next) {
