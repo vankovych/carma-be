@@ -1,4 +1,4 @@
-const Division = require('../models/division')
+const Division = require('./../../models/division')
 const mongoose = require('mongoose')
 
 exports.create = create

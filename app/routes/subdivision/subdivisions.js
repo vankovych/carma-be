@@ -1,4 +1,4 @@
-const Subdivision = require('../models/subdivision')
+const Subdivision = require('../../models/subdivision')
 const mongoose = require('mongoose')
 
 exports.create = create

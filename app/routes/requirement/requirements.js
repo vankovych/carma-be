@@ -1,4 +1,4 @@
-const Requirement = require('../models/requirement')
+const Requirement = require('../../models/requirement')
 const mongoose = require('mongoose')
 
 exports.create = create

@@ -1,5 +1,5 @@
-const Subdivision = require('../models/subdivision')
-const Position = require('../models/position')
+const Subdivision = require('./../../models/subdivision')
+const Position = require('./../../models/position')
 const mongoose = require('mongoose')
 
 exports.create = create

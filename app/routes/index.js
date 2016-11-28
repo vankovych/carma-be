@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const divisions = require('./divisions')
-const subdivision = require('./subdivisions')
-const position = require('./positions')
-const requirement = require('./requirements')
+const divisions = require('./division/divisions')
+const subdivision = require('./subdivision/subdivisions')
+const position = require('./position/positions')
+const requirement = require('./requirement/requirements')
 
 exports.router = router
 
