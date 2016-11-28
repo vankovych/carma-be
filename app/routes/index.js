@@ -5,8 +5,12 @@ const divisions = require('./division/divisions')
 const subdivision = require('./subdivision/subdivisions')
 const position = require('./position/positions')
 const requirement = require('./requirement/requirements')
-
+const user = require('./user/users')
 exports.router = router
+
+router.route ('/user')
+  .post(user.create)
+  .get(user.getAll)
 
 router.route('/divisions')
   .get(divisions.getAll)
@@ -46,3 +50,8 @@ router.route('/requirements/:id')
   .get(requirement.get)
   .delete(requirement.remove)
   .put(requirement.update)
+
+  router.route('/user/:id')
+  .delete(user.remove)
+  .put(user.update)
+  .get(user.get)
