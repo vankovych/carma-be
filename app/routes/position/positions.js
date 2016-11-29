@@ -7,6 +7,7 @@ exports.getAll = getAll
 exports.remove = remove
 exports.get = get
 exports.update = update
+exports.requirements = require('./requirements')
 
 function create (req, res, next) {
   const position = new Position()

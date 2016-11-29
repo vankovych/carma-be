@@ -53,6 +53,12 @@ router.route('/positions/:id')
   .get(position.get)
   .put(position.update)
 
+router.route('/positions/:p_id/requirements')
+  .get(position.requirements.getAll)
+
+router.route('/positions/:p_id/requirements/:r_id')
+  .post(position.requirements.add)
+  .delete(position.requirements.remove)
 
 router.route('/requirements')
   .get(requirement.getAll)
