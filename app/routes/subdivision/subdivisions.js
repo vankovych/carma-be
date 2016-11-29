@@ -6,6 +6,7 @@ exports.getAll = getAll
 exports.get = get
 exports.remove = remove
 exports.update = update
+exports.positions = require('./positions')
 
 function create (req, res, next) {
   const subdivision = new Subdivision()

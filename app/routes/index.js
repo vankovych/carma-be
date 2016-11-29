@@ -22,7 +22,7 @@ router.route('/divisions/:id')
   .put(divisions.update)
 
 router.route('/divisions/:d_id/subdivisions')
-  .get(divisions.subdivisions.get)
+  .get(divisions.subdivisions.getAll)
 
 router.route('/divisions/:d_id/subdivisions/:s_id')
   .post(divisions.subdivisions.add)
@@ -37,6 +37,12 @@ router.route('/subdivisions/:id')
   .put(subdivision.update)
   .get(subdivision.get)
 
+router.route('/subdivisions/:s_id/positions')
+  .get(subdivision.positions.getAll)
+
+router.route('/subdivisions/:s_id/positions/:p_id')
+  .post(subdivision.positions.add)
+  .delete(subdivision.positions.remove)
 
 router.route('/positions')
   .post(position.create)
