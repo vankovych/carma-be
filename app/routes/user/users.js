@@ -9,9 +9,7 @@ exports.get = get
 
 function create (req, res, next) {
   const user = new User()
-  var passw = /^[A-Za-z]\w{7,14}$/
-    
-
+  var passw = /^[a-z]\w{4,14}$/
 
   if (!req.body.password.match(passw) || !req.body.login.match(passw)) {
     res.status(400).json({error: 'Please check your login or password'})
@@ -19,11 +17,11 @@ function create (req, res, next) {
     user.login = req.body.login
     user.password = req.body.password
     user._id = mongoose.Types.ObjectId()
+    user.token = null
 
     user.save(err => {
       if (err) {
         res.send(err)
-        console.log(err)
       }
       res.json({ status: 'OK', data: user })
     })
@@ -59,19 +57,19 @@ function remove (req, res, next) {
 function update (req, res, next) {
   User.findByIdAsync(req.params.id)
     .then(user => {
-         if (user === undefined || user === null) {
+      if (user === undefined || user === null) {
         res.status(404).json({data: `Can't find user with id ${req.params.id}`})
       } else {
-      user.login = req.body.login
-      user.password = req.body.password
+        user.login = req.body.login
+        user.password = req.body.password
 
-      user.save(err => {
-        if (err) {
-          res.send(err)
-        }
+        user.save(err => {
+          if (err) {
+            res.send(err)
+          }
 
-        res.json({ status: 'OK' })
-      })
+          res.json({ status: 'OK' })
+        })
       }
     })
     .catch(next)
