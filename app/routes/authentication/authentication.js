@@ -2,13 +2,13 @@ const User = require('./../../models/user')
 const mongoose = require('mongoose')
 const randToken = require('rand-token')
 const express = require('express')
+const logger = require('./../../libs/logger').logger
 const router = express.Router()
 
 router.post('/login', function login (req, res, next) {
   User.findOneAsync({login: req.body.login, password: req.body.password})
     .then(user => {
       if (user) {
-        console.log(user.token)
         if (user.token === null) {
           user.token = randToken.generate(16)
         }
@@ -22,6 +22,10 @@ router.post('/login', function login (req, res, next) {
       } else {
         res.status(404).json({error: `Login or password are uncorrect. Please try again =)`})
       }
+    })
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 })
 
@@ -40,6 +44,10 @@ router.post('/logout', function logout (req, res, next) {
       } else {
         res.status(400).json({error: `You are already logout`})
       }
+    })
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 })
 

@@ -1,6 +1,7 @@
 const Division = require('./../../models/division')
 const Subdivision = require('./../../models/subdivision')
 const mongoose = require('mongoose')
+const logger = require('./../../libs/logger').logger
 
 exports.getAll = getAll
 exports.add = add
@@ -15,7 +16,10 @@ function getAll (req, res, next) {
         res.status(404).json({error: `Can't find division with id ${req.params.d_id}.`})
       }
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function add (req, res, next) {
@@ -35,6 +39,7 @@ function add (req, res, next) {
               division.subdivisions.push(subdivision._id)
               division.save(err => {
                 if (err) {
+                  logger.error(err)
                   res.status(500).json({error: err})
                 } else {
                   res.status(200).json({status: "OK", data: division})
@@ -49,7 +54,8 @@ function add (req, res, next) {
         })
     })
     .catch(err => {
-      res.status(404).json({error: err})
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 }
 
@@ -60,6 +66,7 @@ function remove (req, res, next) {
         division.subdivisions.splice(division.subdivisions.indexOf(req.params.s_id),1)
         division.save(err => {
           if (err) {
+            logger.error(err)
             res.status(500).json({error: err})
           } else {
             res.status(200).json({status: "OK", data: division})
@@ -69,5 +76,8 @@ function remove (req, res, next) {
         res.status(404).json({error: `Can't find division with id ${req.params.d_id}`})
       }
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }

@@ -1,5 +1,6 @@
 const Subdivision = require('../../models/subdivision')
 const mongoose = require('mongoose')
+const logger = require('./../../libs/logger').logger
 
 exports.create = create
 exports.getAll = getAll
@@ -10,18 +11,18 @@ exports.positions = require('./positions')
 
 function create (req, res, next) {
   const subdivision = new Subdivision()
-    subdivision.name = req.body.name
-    subdivision.subTitle = req.body.subTitle
-    subdivision._id = mongoose.Types.ObjectId()
-    subdivision.subnodes = []
+  subdivision.name = req.body.name
+  subdivision.subTitle = req.body.subTitle
+  subdivision._id = mongoose.Types.ObjectId()
+  subdivision.subnodes = []
 
-    subdivision.save(err => {
-      if (err) {
-        res.send(err)
-      }
-    })
+  subdivision.save(err => {
+    if (err) {
+      res.send(err)
+    }
+  })
 
-    res.status(200).json({status: "OK", data: subdivision})
+  res.status(200).json({status: 'OK', data: subdivision})
 }
 
 function getAll (req, res, next) {
@@ -29,7 +30,10 @@ function getAll (req, res, next) {
     .then(subdivision => {
       res.json({ status: 'OK', data: subdivision })
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function get (req, res, next) {
@@ -41,24 +45,28 @@ function get (req, res, next) {
         res.status(404).end()
       }
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function remove (req, res, next) {
   Subdivision.findByIdAsync(req.params.id)
     .then(subdivision => {
       if (subdivisions === null || subdivision === undefined) {
-        throw `Can't find subdivision with id ${req.params.id}`
+        res.status(404).json({error: `Can't find subdivision with id ${req.params.id}`})
       } else {
         return subdivision
       }
     })
     .then(subdivision => {
       Subdivision.removeAsync({_id: req.params.id})
-      res.status(200).json({status: "OK", data: subdivision})
+      res.status(200).json({status: 'OK', data: subdivision})
     })
     .catch(err => {
-      res.status(404).json({error: err})
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 }
 
@@ -66,7 +74,7 @@ function update (req, res, next) {
   Subdivision.findByIdAsync(req.params.id)
     .then(subdivision => {
       if (subdivision === null || subdivision === undefined) {
-        throw `Can't find subdivision with id ${req.params.id}`
+        res.status(404).json({error: `Can't find subdivision with id ${req.params.id}`})
       } else {
         return subdivision
       }
@@ -86,10 +94,10 @@ function update (req, res, next) {
           throw err
         }
       })
-      res.status(200).json({status: "OK", data: subdivision})
+      res.status(200).json({status: 'OK', data: subdivision})
     })
-    .catch(err =>
-    {
-      res.status(404).json({error: err})
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 }

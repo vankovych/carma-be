@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser')
 const express = require('express')
-const morgan = require('morgan')
+const bunyan = require('bunyan')
+const bunyanMiddleware = require('bunyan-middleware')
 const passport = require('passport')
 const Strategy = require('passport-http-bearer')
 const User = require('./app/models/user')
@@ -8,7 +9,7 @@ const auth = require('./app/routes/authentication/authentication').router
 const mongoose = require('mongoose')
 
 const db = require('./app/libs/db')
-// const logger = require('./app/libs/logger').logger
+const logger = require('./app/libs/logger').logger
 const router = require('./app/routes').router
 
 const app = express()
@@ -36,10 +37,20 @@ passport.use(new Strategy(
       })
   }))
 
+app.use(bunyanMiddleware(
+    { headerName: 'X-Request-Id'
+    , propertyName: 'reqId'
+    , logName: 'req_id'
+    , obscureHeaders: []
+    , logger: logger
+    , additionalRequestFinishData: function(req, res) {
+        return { example: true };
+      }
+    }
+))
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(morgan('tiny'))
 app.use('/', auth)
 app.use('/api', passport.authenticate('bearer', { session: false }), router)
 

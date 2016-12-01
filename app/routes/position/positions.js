@@ -1,6 +1,7 @@
 const Subdivision = require('./../../models/subdivision')
 const Position = require('./../../models/position')
 const mongoose = require('mongoose')
+const logger = require('./../../libs/logger').logger
 
 exports.create = create
 exports.getAll = getAll
@@ -20,7 +21,7 @@ function create (req, res, next) {
     if (err) {
       res.status(500).json({error: err})
     } else {
-      res.status(200).json({status: "OK", data: position})
+      res.status(200).json({status: 'OK', data: position})
     }
   })
 }
@@ -30,7 +31,10 @@ function getAll (req, res, next) {
     .then((position) => {
       res.status(200).json({status: 'OK', data: position})
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function remove (req, res, next) {
@@ -43,18 +47,25 @@ function remove (req, res, next) {
           if (err) {
             res.send(err)
           } else {
-            res.status(200).json({status: "OK", data: position})
+            res.status(200).json({status: 'OK', data: position})
           }
         })
       }
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function get (req, res, next) {
   Position.findByIdAsync(req.params.id)
     .then((position) => {
       res.status(200).json({status: 'OK', data: position})
+    })
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 }
 
@@ -68,16 +79,20 @@ function update (req, res, next) {
       if (position === undefined || position === null) {
         res.status(404).json({err: `Can't find position with id ${req.params.id}`})
       } else {
-         position.name = ('name' in req.body) ? req.body.name : position.name
-          position.subTitle = ('subTitle' in req.body) ? req.body.subTitle : position.subTitle
+        position.name = ('name' in req.body) ? req.body.name : position.name
+        position.subTitle = ('subTitle' in req.body) ? req.body.subTitle : position.subTitle
 
-          position.save((err) => {
-            if (err) {
-              res.status(500).send(err)
-            } else {
-              res.status(200).json({status: 'OK', data: position})
-            }
-          })
+        position.save((err) => {
+          if (err) {
+            res.status(500).send(err)
+          } else {
+            res.status(200).json({status: 'OK', data: position})
+          }
+        })
       }
+    })
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 }

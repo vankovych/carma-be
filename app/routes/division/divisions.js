@@ -1,5 +1,6 @@
 const Division = require('./../../models/division')
 const mongoose = require('mongoose')
+const logger = require('./../../libs/logger')
 
 exports.create = create
 exports.getAll = getAll
@@ -17,19 +18,22 @@ function create (req, res, next) {
 
   division.save(err => {
     if (err) {
+      logger.error(err)
       res.send(err)
     }
     res.json({ status: 'OK`', data: division })
   })
-    .catch(next)
 }
 
 function getAll (req, res, next) {
-  Division.findAsync() 
+  Division.findAsync()
     .then(divisions => {
       res.json({ status: 'OK', data: divisions })
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function get (req, res, next) {
@@ -38,10 +42,13 @@ function get (req, res, next) {
       if (division) {
         res.json({ status: 'OK', data: division })
       } else {
-        res.status(404).end()
+        res.status(404).json({error: `Can't find division with id ${req.params.id}`})
       }
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function remove (req, res, next) {
@@ -49,7 +56,14 @@ function remove (req, res, next) {
     .then(() => {
       res.json({ status: 'OK' })
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      throw err
+    })
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function update (req, res, next) {
@@ -60,11 +74,15 @@ function update (req, res, next) {
 
       division.save(err => {
         if (err) {
+          logger.error(err)
           res.send(err)
         }
 
         res.json({ status: 'OK' })
       })
     })
-    .catch(next)
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }

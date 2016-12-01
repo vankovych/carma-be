@@ -2,17 +2,14 @@ const bunyan = require('bunyan');
 
 const logger = bunyan.createLogger({
     name: "carmin",
-    serializers: {
-        req: reqSerializer
-    }
+    streams: [{
+        type: 'rotating-file',
+        path: __dirname + './../log/loginfo.json',
+        period: '1d',
+        count: 30    
+    }],
+    level: 'trace',
+    serializers: bunyan.stdSerializers
 });
 
 exports.logger = logger;
-
-function reqSerializer(req) {
-    return {
-        method: req.method,
-        url: req.url,
-        headers: req.headers
-    };
-}

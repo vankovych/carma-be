@@ -1,5 +1,6 @@
 const Position = require('./../../models/position')
 const Requirement = require('./../../models/requirement')
+const logget = require('./../../libs/logger').logger
 
 exports.getAll = getAll
 exports.add = add
@@ -13,6 +14,10 @@ function getAll (req, res, next) {
       } else {
         res.status(404).json({error: `Can't find position with id ${req.params.p_id}`})
       }
+    })
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
     })
 }
 
@@ -33,6 +38,7 @@ function add (req, res, next) {
               position.requirements.push(requirement._id)
               position.save(err => {
                 if (err) {
+                  logger.error(err)
                   res.status(500).json({error: err})
                 } else {
                   res.status(200).json({status: 'OK', data: position, insert: true})
@@ -46,21 +52,26 @@ function add (req, res, next) {
           }
         })
     })
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })
 }
 
 function remove (req, res, next) {
   Position.findByIdAsync(req.params.p_id)
     .then(position => {
       if (position) {
-        if (position.requirements.indexOf(req.params.r_id) !== -1){
-        position.requirements.splice(position.requirements.indexOf(req.params.r_id), 1)
-        position.save(err => {
-          if (err) {
-            res.status(500).json({error: err})
-          } else {
-            res.status(200).json({status: 'OK', data: position})
-          }
-        })
+        if (position.requirements.indexOf(req.params.r_id) !== -1) {
+          position.requirements.splice(position.requirements.indexOf(req.params.r_id), 1)
+          position.save(err => {
+            if (err) {
+              logger.error(err)
+              res.status(500).json({error: err})
+            } else {
+              res.status(200).json({status: 'OK', data: position})
+            }
+          })
         } else {
           res.status(200).json({status: 'OK', data: position})
         }
@@ -68,4 +79,7 @@ function remove (req, res, next) {
         res.status(404).json({error: `Can't find subdivision with id ${req.params.p_id}`})
       }
     })
-}
+    .catch(err => {
+      logger.error(err)
+      res.status(500).json({error: err})
+    })}
